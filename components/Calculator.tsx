@@ -400,10 +400,8 @@ export default function Calculator() {
             )}
 
             <div className="wizard-acciones">
-              <button type="submit" className={`btn btn-primario ${pasoValido(paso) ? 'animacion-siguiente' : ''}`}>
-                {paso < TOTAL_PASOS - 1
-                  ? (pasoValido(paso) ? "Sigue aquí →" : "Siguiente →")
-                  : "Ver lo que pierdo →"}
+              <button type="submit" className={`btn btn-primario ${pasoValido(paso) ? "animacion-siguiente" : ""}`}>
+                {paso < TOTAL_PASOS - 1 ? "Siguiente →" : "Ver lo que pierdo →"}
               </button>
               <button type="button" className="btn btn-texto" onClick={retroceder}>
                 Atrás
@@ -523,7 +521,8 @@ export default function Calculator() {
 
         <section className="revelacion">
           <div className="revelacion-inner">
-            <div className="final visible" style={{ marginBottom: "1.5rem" }}>
+            {/* Etapa 1 — la cifra (con conteo rápido) */}
+            <div className="rv-stage rv-1" style={{ marginBottom: "1.5rem" }}>
               <span className="final-label">Estás dejando ir aproximadamente</span>
               <div className="final-cifra">
                 <span>
@@ -536,29 +535,28 @@ export default function Calculator() {
               </div>
             </div>
 
-            {/* METÁFORA con ícono — aterriza la cifra, justo debajo */}
-            <div className="metafora-destacada" style={{ 
-                marginBottom: "2rem", 
-                backgroundColor: "var(--bg-card)", 
-                padding: "1.2rem", 
+            {/* Etapa 2 — "el equivalente a…" (aparece tras cargar la cifra) */}
+            <div className="rv-stage rv-2 metafora-destacada" style={{
+                marginBottom: "2rem",
+                backgroundColor: "var(--bg-card)",
+                padding: "1.2rem",
                 borderRadius: "var(--radio)",
                 border: "1px solid var(--borde)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
               }}>
-              <div className="iconos-grid" style={{ 
-                  display: "flex", 
-                  flexWrap: "wrap", 
-                  justifyContent: "center", 
-                  gap: "0.4rem", 
+              <div className="iconos-grid" style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "0.4rem",
                   marginBottom: "1rem"
                 }}>
                 {meta.items.map((it, idx1) => (
                   Array.from({ length: Math.min(it.cantidad, 20) }).map((_, idx2) => (
-                    <span key={`${idx1}-${idx2}`} style={{ 
-                        width: "28px", 
-                        height: "28px", 
-                        display: "inline-flex", 
-                        alignItems: "center", 
+                    <span key={`${idx1}-${idx2}`} style={{
+                        width: "28px",
+                        height: "28px",
+                        display: "inline-flex",
+                        alignItems: "center",
                         justifyContent: "center",
                         color: "var(--acento)"
                       }}>
@@ -567,13 +565,7 @@ export default function Calculator() {
                   ))
                 ))}
                 {meta.items.some(it => it.cantidad > 20) && (
-                  <span style={{ 
-                      alignSelf: "center", 
-                      fontSize: "0.9rem", 
-                      fontWeight: "bold", 
-                      color: "var(--acento)", 
-                      marginLeft: "4px" 
-                    }}>+</span>
+                  <span style={{ alignSelf: "center", fontSize: "0.9rem", fontWeight: "bold", color: "var(--acento)", marginLeft: "4px" }}>+</span>
                 )}
               </div>
               <div style={{ width: "100%", height: "1px", background: "var(--borde)", marginBottom: "1rem", opacity: 0.8 }}></div>
@@ -582,29 +574,36 @@ export default function Calculator() {
               </p>
             </div>
 
-            <button className="btn-recuperar" onClick={() => setFase("plan")}>
-              ¿Cómo lo recupero? →
-            </button>
-            <button
-              className="btn-volver"
-              onClick={() => {
-                setFase("form");
-                setPaso(0);
-              }}
-            >
-              Ajustar mis números
-            </button>
+            {/* Etapa 3 — el CTA (con latido lento que llama la atención) */}
+            <div className="rv-stage rv-3">
+              <button className="btn-recuperar cta-atencion" onClick={() => setFase("plan")}>
+                ¿Cómo lo recupero? →
+              </button>
+            </div>
 
-            <details className="detalles-calculo" style={{ textAlign: "left", marginTop: "2rem", padding: "1rem", background: "var(--bg-card)", borderRadius: "var(--radio)", fontSize: "0.85rem", border: "1px solid var(--borde)" }}>
-              <summary style={{ cursor: "pointer", fontWeight: "bold", color: "var(--fg)" }}>¿Cómo se calcula este número?</summary>
-              <ul style={{ marginTop: "1rem", paddingLeft: "1.2rem", color: "var(--fg-dim)", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <li><b>Prospectos generados:</b> Inversión mensual ({formatearMoneda(entradas.mercadeoMes, moneda)}) / Costo por prospecto ({formatearMoneda(entradas.costoProspecto, moneda)}) = {formatearNum(d.prospectosMes)} prospectos/mes.</li>
-                <li><b>Brecha operativa:</b> Según tus respuestas (tiempo de contacto, seguimiento, etc.), estimamos que un <b>{formatearNum(d.tasaSinSeguimiento * 100)}%</b> de los prospectos no recibe atención óptima.</li>
-                <li><b>Oportunidades reales perdidas:</b> Asumimos muy conservadoramente que solo el <b>1%</b> de esos prospectos mal gestionados habría alquilado. Es decir, {formatearNum(d.perdidasMes, 1)} arriendos perdidos al mes ({formatearNum(d.perdidasAno, 1)} al año).</li>
-                <li><b>Valor por cliente (LTV):</b> Comisión del {entradas.comision}% sobre el canon ({formatearMoneda(entradas.canon, moneda)}) durante {entradas.permanencia} meses = {formatearMoneda(d.comisionPorCliente, moneda)}.</li>
-                <li><b>Pérdida anual:</b> {formatearNum(d.perdidasAno, 1)} clientes × {formatearMoneda(d.comisionPorCliente, moneda)} = <b>{formatearMoneda(d.perdidaAnual, moneda)}</b>.</li>
-              </ul>
-            </details>
+            {/* Etapa 4 — el resto, al final */}
+            <div className="rv-stage rv-4">
+              <button
+                className="btn-volver"
+                onClick={() => {
+                  setFase("form");
+                  setPaso(0);
+                }}
+              >
+                Ajustar mis números
+              </button>
+
+              <details className="detalles-calculo" style={{ textAlign: "left", marginTop: "2rem", padding: "1rem", background: "var(--bg-card)", borderRadius: "var(--radio)", fontSize: "0.85rem", border: "1px solid var(--borde)" }}>
+                <summary style={{ cursor: "pointer", fontWeight: "bold", color: "var(--fg)" }}>¿Cómo se calcula este número?</summary>
+                <ul style={{ marginTop: "1rem", paddingLeft: "1.2rem", color: "var(--fg-dim)", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <li><b>Prospectos generados:</b> Inversión mensual ({formatearMoneda(entradas.mercadeoMes, moneda)}) / Costo por prospecto ({formatearMoneda(entradas.costoProspecto, moneda)}) = {formatearNum(d.prospectosMes)} prospectos/mes.</li>
+                  <li><b>Brecha operativa:</b> Según tus respuestas (tiempo de contacto, seguimiento, etc.), estimamos que un <b>{formatearNum(d.tasaSinSeguimiento * 100)}%</b> de los prospectos no recibe atención óptima.</li>
+                  <li><b>Oportunidades reales perdidas:</b> Asumimos muy conservadoramente que solo el <b>1%</b> de esos prospectos mal gestionados habría alquilado. Es decir, {formatearNum(d.perdidasMes, 1)} arriendos perdidos al mes ({formatearNum(d.perdidasAno, 1)} al año).</li>
+                  <li><b>Valor por cliente (LTV):</b> Comisión del {entradas.comision}% sobre el canon ({formatearMoneda(entradas.canon, moneda)}) durante {entradas.permanencia} meses = {formatearMoneda(d.comisionPorCliente, moneda)}.</li>
+                  <li><b>Pérdida anual:</b> {formatearNum(d.perdidasAno, 1)} clientes × {formatearMoneda(d.comisionPorCliente, moneda)} = <b>{formatearMoneda(d.perdidaAnual, moneda)}</b>.</li>
+                </ul>
+              </details>
+            </div>
           </div>
         </section>
 

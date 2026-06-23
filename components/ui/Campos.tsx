@@ -1,3 +1,6 @@
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
 import { formatearMiles, type Moneda } from "@/lib/calc";
 import { num, limpiar } from "@/lib/util";
 
@@ -7,7 +10,9 @@ function Ayuda({ error, help }: { error?: string; help?: string }) {
   return null;
 }
 
-/** Campo de dinero: input con miles + selector de moneda. */
+/** Campo de dinero: input con separador de miles + sufijo de moneda.
+ *  Preserva la posición del cursor al reformatear (cuenta dígitos a la
+ *  izquierda del cursor), para que editar en medio no mande el dígito al final. */
 export function MoneyField({
   id,
   label,
@@ -29,17 +34,55 @@ export function MoneyField({
   help?: string;
   ancho?: boolean;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const digitosAntesRef = useRef<number | null>(null);
+
+  const formateado = value ? formatearMiles(num(value)) : "";
+
+  // Tras cada reformateo, recoloca el cursor después del mismo nº de dígitos.
+  useLayoutEffect(() => {
+    const input = inputRef.current;
+    if (!input || digitosAntesRef.current == null) return;
+    const objetivo = digitosAntesRef.current;
+    digitosAntesRef.current = null;
+
+    const texto = input.value;
+    let pos = texto.length;
+    if (objetivo <= 0) {
+      pos = 0;
+    } else {
+      let cuenta = 0;
+      for (let i = 0; i < texto.length; i++) {
+        if (texto[i] >= "0" && texto[i] <= "9") {
+          cuenta++;
+          if (cuenta === objetivo) {
+            pos = i + 1;
+            break;
+          }
+        }
+      }
+    }
+    input.setSelectionRange(pos, pos);
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const caret = e.target.selectionStart ?? e.target.value.length;
+    digitosAntesRef.current = e.target.value.slice(0, caret).replace(/\D/g, "").length;
+    onChange(limpiar(e.target.value));
+  };
+
   return (
     <div className={`campo-num${ancho ? " ancho" : ""}`}>
       {label && <label htmlFor={id}>{label}</label>}
       <div className={`entrada-linea money${error ? " invalido" : ""}`}>
         <input
           id={id}
+          ref={inputRef}
           type="text"
           inputMode="numeric"
           placeholder={placeholder}
-          value={value ? formatearMiles(num(value)) : ""}
-          onChange={(e) => onChange(limpiar(e.target.value))}
+          value={formateado}
+          onChange={handleChange}
         />
         <span className="afijo-moneda">{moneda}</span>
       </div>
