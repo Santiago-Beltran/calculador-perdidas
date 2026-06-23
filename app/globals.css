@@ -608,7 +608,12 @@ p { margin: 0; }
 .step.activo .step-lbl { color: var(--tinta); }
 .step.hecho .step-num { background: var(--verde); border-color: var(--verde); color: var(--bosque); }
 .step.hecho .step-lbl { color: var(--tinta-suave); }
-@media (max-width: 480px) { .step-lbl { display: none; } }
+/* Sección con info faltante (te la saltaste): se marca, no se da por hecha. */
+.step.falta .step-num { background: var(--alerta); border-color: var(--alerta); color: var(--blanco); font-weight: 700; }
+.step.falta .step-lbl { color: var(--alerta); }
+/* En pantallas que no alcanzan para las etiquetas, deja solo los números
+   (el contexto lo da el "Paso 0X · …"); así el stepper nunca se corta. */
+@media (max-width: 640px) { .step-lbl { display: none; } }
 
 /* ── Campo ancho, money, moneda ───────────────────────── */
 .campo-num.ancho { grid-column: 1 / -1; }
@@ -946,6 +951,15 @@ p { margin: 0; }
 .btn-recuperar:hover { background: #24411a; }
 .btn-recuperar:active { transform: translateY(1px); }
 .btn-recuperar .wa { width: 1.3rem; height: 1.3rem; color: var(--verde); flex-shrink: 0; }
+/* CTA dominante (plan): fondo oscuro, letras blancas, pero más grande y con
+   un halo verde para que resalte como la acción principal. */
+.btn-recuperar.grande {
+  margin-top: 2.6rem;
+  padding: 1.35rem 1.5rem;
+  font-size: 1.18rem;
+  border-width: 2px;
+  box-shadow: 0 0 0 4px rgba(107, 191, 78, 0.18);
+}
 
 .cta-reaseguro {
   margin-top: 0.9rem;
@@ -981,9 +995,6 @@ p { margin: 0; }
   padding: clamp(1.9rem, 6vw, 3.2rem) clamp(1.7rem, 5vw, 3rem);
 }
 .plan .eyebrow { color: var(--verde); }
-/* Continuidad "match-cut": el plan se ancla más abajo, para que el título
-   "¿Cómo lo recupero?" aparezca cerca de donde estaba el botón del resultado. */
-.plan-stage .marco { margin-top: 42vh; margin-bottom: auto; }
 .plan-titulo {
   margin-top: 0;
   font-size: clamp(1.7rem, 5vw, 2.4rem);

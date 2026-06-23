@@ -147,7 +147,7 @@ export function formatearCompacto(n: number, moneda: Moneda = "COP"): string {
   const s = simbolo(moneda);
   const abs = Math.abs(n);
   if (abs >= 1_000_000_000)
-    return `${s}${(n / 1_000_000_000).toLocaleString("es-CO", { maximumFractionDigits: 1 })} B`;
+    return `${s}${(n / 1_000_000_000).toLocaleString("es-CO", { maximumFractionDigits: 1 })} MM`;
   if (abs >= 1_000_000)
     return `${s}${(n / 1_000_000).toLocaleString("es-CO", { maximumFractionDigits: 1 })} M`;
   if (abs >= 1_000)
