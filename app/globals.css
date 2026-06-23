@@ -1170,3 +1170,49 @@ p { margin: 0; }
   0%, 100% { box-shadow: 0 0 0 0 rgba(107, 191, 78, 0); transform: scale(1); }
   50%      { box-shadow: 0 0 0 7px rgba(107, 191, 78, 0.14); transform: scale(1.015); }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   LEGIBILIDAD
+   El estilo editorial usa micro-tipografía mono (0.7–0.8rem ≈ 11–13px). Para
+   etiquetas decorativas (eyebrow, contador de pasos) está bien. Pero el texto
+   que el usuario DEBE leer (ayudas de campo, etiquetas, preguntas, reaseguros)
+   quedaba demasiado pequeño, sobre todo en móvil. Regla: lo funcional ≥ ~15px,
+   y un punto más en pantallas chicas. Se sobreescribe aquí, al final, para no
+   tocar las reglas afinadas de arriba (fácil de revisar / revertir).
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* — Texto funcional (hay que leerlo para usar la calculadora) — */
+.intro-meta        { font-size: 0.9rem; }                 /* "Toma 1 minuto · sin registro" */
+.paso-ayuda        { font-size: 0.92rem; line-height: 1.55; }
+.campo-num label   { font-size: 0.96rem; }
+.campo-ayuda       { font-size: 0.86rem; }                /* "portales, redes y publicidad al mes" */
+.campo-ayuda.derivado { font-size: 0.92rem; }            /* "lo que te cuesta cada interesado" */
+.crm-q             { font-size: 1.02rem; }                /* las preguntas del cuestionario */
+.afijo-moneda      { font-size: 0.9rem; }
+.moneda-bar-lbl    { font-size: 0.8rem; }
+.final-moneda      { font-size: 0.9rem; }
+.final-exacto      { font-size: 0.96rem; }
+.nota-pie          { font-size: 0.82rem; }
+.cta-reaseguro,
+.plan-reaseguro    { font-size: 0.82rem; }
+.plan-txt p        { font-size: 0.96rem; }
+.lectura-honesta p { font-size: 1rem; }
+.ia-detalle p      { font-size: 0.98rem; }
+.punch-txt         { font-size: 0.88rem; }
+
+/* — Etiquetas decorativas: se quedan pequeñas, solo un empujón leve — */
+.eyebrow, .paso-cuenta { font-size: 0.78rem; }
+.paso-indice           { font-size: 0.78rem; }
+.bmk-lbl               { font-size: 0.78rem; }
+
+/* — Móvil: un punto más en lo más leído (donde el problema se siente peor) — */
+@media (max-width: 560px) {
+  .intro-meta        { font-size: 0.95rem; }
+  .paso-ayuda        { font-size: 0.98rem; }
+  .campo-num label   { font-size: 1rem; }
+  .campo-ayuda       { font-size: 0.92rem; }
+  .campo-ayuda.derivado { font-size: 0.98rem; }
+  .crm-q             { font-size: 1.06rem; }
+  .cta-reaseguro,
+  .plan-reaseguro    { font-size: 0.86rem; }
+}
