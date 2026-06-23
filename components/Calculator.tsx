@@ -227,10 +227,10 @@ export default function Calculator() {
   if (fase === "form") {
     const nivel =
       d.tasaCierre >= CIERRE_CLASE_MUNDIAL
-        ? "Tasa de clase mundial."
+        ? "Excelente tasa de cierre."
         : d.tasaCierre >= CIERRE_BUENO
-          ? "Buena tasa. Los mejores agentes inmobiliarios (Zillow) llegan al 3% - 5%."
-          : "Estás por debajo del líder de la industria. Operadores top con Zillow suelen llegar al 3% - 5%.";
+          ? "Vas bien. La barra te ubica frente a los referentes del sector."
+          : "Hay margen para subirla. La barra te ubica frente a los referentes del sector.";
 
     return (
       <main className="escenario-stage">
@@ -435,15 +435,31 @@ export default function Calculator() {
       `Hola Santiago, hice el diagnóstico y pierdo aproximadamente ` +
       `${formatearMoneda(d.perdidaAnual, moneda)} al año.${fugaUno} ` +
       `Quiero los 2 arreglos simples que puedo hacer esta semana para taparla.`;
+
+    // Lectura honesta según volumen y nº de huecos: a veces NO necesitan un sistema.
+    const huecos = operacion.filter((x) => !x).length;
+    const lecturaHonesta =
+      d.prospectosMes < 80 || huecos <= 1
+        ? "Con tu volumen, todavía no necesitas montar un sistema. Un par de hábitos a mano —revisar los de +48 h y una cadencia de contacto— te alcanzan por ahora. No te dejes vender “IA” aún: no la necesitas."
+        : d.prospectosMes >= 300 && huecos >= 3
+          ? "Con tu volumen y tus huecos, sistematizar el seguimiento ya se paga solo. Y ojo: para esto no necesitas “IA”, basta automatización simple (alertas, recordatorios). Desconfía de quien te venda IA para todo."
+          : "Antes de invertir en software, hay arreglos manuales que ya te devuelven buena parte. Empieza por ahí y automatiza solo cuando el volumen te gane. La “IA” rara vez es lo primero que necesitas.";
+
     return (
       <main className="escenario-stage plan-stage">
         <div className="marco">
           <BrandBar label="" />
           <section className="plan">
             <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
+
+            <div className="lectura-honesta">
+              <span className="lh-label">Lectura honesta · tu caso</span>
+              <p>{lecturaHonesta}</p>
+            </div>
+
             <p className="plan-intro">
-              Ya sabes cuál fuga te cuesta más. Escríbeme y te paso <b>2 arreglos simples que
-              puedes hacer esta semana</b> para taparla.
+              Sea cual sea tu caso, los <b>2 arreglos para tu fuga #1</b> los puedes hacer tú esta
+              semana. Te los paso por WhatsApp, gratis.
             </p>
 
             <a
