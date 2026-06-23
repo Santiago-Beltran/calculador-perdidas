@@ -21,7 +21,7 @@ import { num, clamp } from "@/lib/util";
 import { metaforaPara } from "@/lib/metaforas";
 import { linkWhatsApp } from "@/lib/contacto";
 import { Icono } from "./ui/Icono";
-import { BrandBar } from "./ui/Marca";
+import { BrandBar, Wordmark } from "./ui/Marca";
 import { MoneyField, NumberField } from "./ui/Campos";
 import { CurrencyToggle } from "./ui/CurrencyToggle";
 import { Stepper } from "./ui/Stepper";
@@ -133,6 +133,11 @@ export default function Calculator() {
 
   const valorAnimado = useCountUp(d.perdidaAnual, fase === "reveal");
 
+  // Al cambiar de fase/paso, vuelve arriba para una transición limpia (sin scroll residual).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [fase, paso]);
+
   // Todos los campos son obligatorios: cada paso valida antes de avanzar.
   const pasoValido = (p: number) => {
     if (p === 0) return num(mercadeoMes) > 0 && num(costoProspecto) > 0;
@@ -147,14 +152,31 @@ export default function Calculator() {
       setErrorPaso(true);
       return;
     }
+    if (paso < TOTAL_PASOS - 1) {
+      setErrorPaso(false);
+      setPaso((p) => p + 1);
+      return;
+    }
+    // Último paso: exige que TODOS estén completos (por si saltó con el stepper).
+    const incompleto = [0, 1, 2, 3].find((p) => !pasoValido(p));
+    if (incompleto !== undefined) {
+      setErrorPaso(true);
+      setPaso(incompleto);
+      return;
+    }
     setErrorPaso(false);
-    if (paso < TOTAL_PASOS - 1) setPaso((p) => p + 1);
-    else setFase("reveal");
+    setFase("reveal");
   };
   const retroceder = () => {
     setErrorPaso(false);
     if (paso > 0) setPaso((p) => p - 1);
     else setFase("intro");
+  };
+
+  // Navegación libre entre secciones desde el stepper superior.
+  const irAPaso = (i: number) => {
+    setErrorPaso(false);
+    setPaso(i);
   };
 
   const responderOp = (i: number, val: boolean) => {
@@ -198,17 +220,18 @@ export default function Calculator() {
     return (
       <main className="escenario-stage">
         <div className="marco">
-          <BrandBar label={`Paso ${paso + 1} de ${TOTAL_PASOS}`} />
-
           <div className="stepper">
             {PASOS_NOMBRES.map((nombre, i) => (
-              <div
+              <button
+                type="button"
                 key={nombre}
                 className={`step${i === paso ? " activo" : ""}${i < paso ? " hecho" : ""}`}
+                onClick={() => irAPaso(i)}
+                aria-current={i === paso ? "step" : undefined}
               >
                 <span className="step-num">{i < paso ? "✓" : i + 1}</span>
                 <span className="step-lbl">{nombre}</span>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -369,13 +392,16 @@ export default function Calculator() {
 
             <div className="wizard-acciones">
               <button type="submit" className={`btn btn-primario ${pasoValido(paso) ? 'animacion-siguiente' : ''}`}>
-                {paso < TOTAL_PASOS - 1 
-                  ? (pasoValido(paso) ? "Sigue aquí →" : "Siguiente →") 
+                {paso < TOTAL_PASOS - 1
+                  ? (pasoValido(paso) ? "Sigue aquí →" : "Siguiente →")
                   : "Ver lo que pierdo →"}
               </button>
               <button type="button" className="btn btn-texto" onClick={retroceder}>
                 Atrás
               </button>
+              <span className="acciones-marca">
+                <Wordmark />
+              </span>
             </div>
           </form>
         </div>
@@ -389,9 +415,8 @@ export default function Calculator() {
       `Hola Santiago, hice el diagnóstico de oportunidades perdidas y me dio ` +
       `${formatearMoneda(d.perdidaAnual, moneda)} al año. Quiero ver cómo recuperarlo.`;
     return (
-      <main className="escenario-stage">
+      <main className="escenario-stage plan-stage">
         <div className="marco">
-          <BrandBar label="El siguiente paso" />
           <section className="plan">
             <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
 
