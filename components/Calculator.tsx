@@ -21,7 +21,7 @@ import { num, clamp } from "@/lib/util";
 import { metaforaPara } from "@/lib/metaforas";
 import { linkWhatsApp } from "@/lib/contacto";
 import { Icono } from "./ui/Icono";
-import { BrandBar, Wordmark } from "./ui/Marca";
+import { BrandBar } from "./ui/Marca";
 import { MoneyField, NumberField } from "./ui/Campos";
 import { CurrencyToggle } from "./ui/CurrencyToggle";
 import { Stepper } from "./ui/Stepper";
@@ -220,19 +220,28 @@ export default function Calculator() {
     return (
       <main className="escenario-stage">
         <div className="marco">
+          <BrandBar label="" />
+
           <div className="stepper">
-            {PASOS_NOMBRES.map((nombre, i) => (
-              <button
-                type="button"
-                key={nombre}
-                className={`step${i === paso ? " activo" : ""}${i < paso ? " hecho" : ""}`}
-                onClick={() => irAPaso(i)}
-                aria-current={i === paso ? "step" : undefined}
-              >
-                <span className="step-num">{i < paso ? "✓" : i + 1}</span>
-                <span className="step-lbl">{nombre}</span>
-              </button>
-            ))}
+            {PASOS_NOMBRES.map((nombre, i) => {
+              const completo = pasoValido(i);
+              const activo = i === paso;
+              const falta = !completo && !activo && errorPaso;
+              return (
+                <button
+                  type="button"
+                  key={nombre}
+                  className={`step${activo ? " activo" : ""}${completo && !activo ? " hecho" : ""}${falta ? " falta" : ""}`}
+                  onClick={() => irAPaso(i)}
+                  aria-current={activo ? "step" : undefined}
+                >
+                  <span className="step-num">
+                    {falta ? "!" : completo && !activo ? "✓" : i + 1}
+                  </span>
+                  <span className="step-lbl">{nombre}</span>
+                </button>
+              );
+            })}
           </div>
 
           <form
@@ -399,9 +408,6 @@ export default function Calculator() {
               <button type="button" className="btn btn-texto" onClick={retroceder}>
                 Atrás
               </button>
-              <span className="acciones-marca">
-                <Wordmark />
-              </span>
             </div>
           </form>
         </div>
@@ -417,6 +423,7 @@ export default function Calculator() {
     return (
       <main className="escenario-stage plan-stage">
         <div className="marco">
+          <BrandBar label="" />
           <section className="plan">
             <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
 
@@ -430,25 +437,19 @@ export default function Calculator() {
               <li>
                 <span className="plan-num">2</span>
                 <div className="plan-txt">
-                  <b>Lo reviso y selecciono la mejor opción para tu caso.</b>
-                </div>
-              </li>
-              <li>
-                <span className="plan-num">3</span>
-                <div className="plan-txt">
-                  <b>En 24 horas, tienes un plan sencillo de mejora que puedes probar tú mismo.</b>
+                  <b>Te devuelvo un plan hecho para ti.</b>
                 </div>
               </li>
             </ol>
 
             <a
-              className="btn-recuperar"
+              className="btn-recuperar grande"
               href={linkWhatsApp(mensajeWa)}
               target="_blank"
               rel="noopener noreferrer"
             >
               <IconoWhatsApp />
-              Enviar resultado →
+              Enviar mi resultado →
             </a>
             <button className="btn-volver" onClick={() => setFase("reveal")}>
               Volver
