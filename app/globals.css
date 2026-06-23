@@ -23,6 +23,14 @@
   --linea-dark:   rgba(255, 255, 255, 0.14);
 
   --sombra: 0 1px 2px rgba(21,40,8,0.05), 0 18px 48px -26px rgba(21,40,8,0.5);
+
+  /* ── Alias usados en el panel oscuro (resultado/plan) ── */
+  --acento:  var(--verde);
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --borde:   var(--linea-dark);
+  --fg:      var(--blanco);
+  --fg-dim:  var(--sage);
+  --radio:   8px;
 }
 
 * { box-sizing: border-box; }
@@ -72,16 +80,20 @@ p { margin: 0; }
 /* ── Estructura ───────────────────────────────────────── */
 .escenario-stage {
   min-height: 100vh;
+  min-height: 100dvh; /* viewport real en móvil (evita saltos por la barra del navegador) */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: clamp(1.2rem, 4vw, 2.5rem);
 }
 
+/* Centrado vertical con margin auto: cuando el contenido es más alto que la
+   pantalla, los márgenes se colapsan y se puede hacer scroll desde arriba
+   (no se recorta la parte superior, como pasaba en el paso de Operación). */
 .marco {
   width: 100%;
   max-width: 660px;
+  margin-block: auto;
 }
 
 /* Marca arriba */
@@ -260,6 +272,12 @@ p { margin: 0; }
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  flex-wrap: wrap;
+}
+/* Logo a la derecha de los botones (libera espacio vertical de arriba). */
+.acciones-marca { margin-left: auto; }
+@media (max-width: 380px) {
+  .acciones-marca { display: none; } /* en pantallas muy angostas, prioriza los botones */
 }
 
 /* ── REVELACIÓN (panel verde bosque) ──────────────────── */
@@ -320,14 +338,21 @@ p { margin: 0; }
   color: var(--verde);
 }
 .final-cifra {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
   font-family: var(--fuente-serif), Georgia, serif;
   font-weight: 500;
   font-size: clamp(3rem, 13vw, 6rem);
-  line-height: 1;
+  line-height: 1.05;
   color: var(--blanco);
   letter-spacing: -0.02em;
   margin-top: 0.7rem;
   font-variant-numeric: tabular-nums;
+  /* Estabiliza la altura durante el conteo animado: nunca envuelve ni cambia
+     de alto, así la pantalla no "tiembla" mientras sube el número. */
+  white-space: nowrap;
+  min-height: 1.05em;
 }
 .final-cifra .u { color: var(--verde); }
 /* Moneda explícita justo bajo la cifra (responde "¿COP o USD?" de un vistazo). */
@@ -534,7 +559,21 @@ p { margin: 0; }
   align-items: center;
   margin-bottom: clamp(1.8rem, 5vw, 2.6rem);
 }
-.step { display: flex; align-items: center; gap: 0.5rem; }
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer; /* navegable: salta entre secciones */
+  -webkit-tap-highlight-color: transparent;
+}
+.step:hover .step-num { border-color: var(--bosque); color: var(--tinta); }
+.step:hover .step-lbl { color: var(--tinta); }
 .step-num {
   width: 1.6rem;
   height: 1.6rem;
@@ -942,11 +981,15 @@ p { margin: 0; }
   padding: clamp(1.9rem, 6vw, 3.2rem) clamp(1.7rem, 5vw, 3rem);
 }
 .plan .eyebrow { color: var(--verde); }
+/* Continuidad "match-cut": el plan se ancla más abajo, para que el título
+   "¿Cómo lo recupero?" aparezca cerca de donde estaba el botón del resultado. */
+.plan-stage .marco { margin-top: 42vh; margin-bottom: auto; }
 .plan-titulo {
-  margin-top: 0.8rem;
+  margin-top: 0;
   font-size: clamp(1.7rem, 5vw, 2.4rem);
   line-height: 1.12;
   color: var(--blanco);
+  animation: subir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .plan-pasos {
   list-style: none;
