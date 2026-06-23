@@ -436,14 +436,19 @@ export default function Calculator() {
       `${formatearMoneda(d.perdidaAnual, moneda)} al año.${fugaUno} ` +
       `Quiero los 2 arreglos simples que puedo hacer esta semana para taparla.`;
 
-    // Lectura honesta según volumen y nº de huecos (sin pelear el "sueño" de IA).
-    const huecos = operacion.filter((x) => !x).length;
-    const lecturaHonesta =
-      d.prospectosMes < 80 || huecos <= 1
-        ? "Con tu volumen, un par de hábitos a mano —revisar los de +48 h y una cadencia de contacto— ya te devuelven buena parte. Todavía no necesitas montar un sistema completo."
-        : d.prospectosMes >= 300 && huecos >= 3
-          ? "Con tu volumen y tus huecos, sistematizar el seguimiento ya se paga solo: el costo de no hacerlo supera el de montarlo."
-          : "Hay arreglos manuales que ya te devuelven buena parte. Empieza por ahí y sistematiza cuando el volumen te gane.";
+    // Diagnóstico por volumen: dónde está el cuello de botella (no promesa de ROI).
+    const volumen = d.prospectosMes;
+    const segmento = volumen < 100 ? "bajo" : volumen > 400 ? "alto" : "medio";
+    const lecturaHonesta = {
+      bajo: "Con este volumen, lo más probable es que tu cuello de botella sea la atracción: están llegando pocos prospectos. Antes de pulir el seguimiento, mira cómo traer más — ahí está tu mayor palanca.",
+      medio: "Tienes un flujo decente. Hay arreglos manuales que ya te devuelven buena parte; empieza por ahí antes de invertir en sistemas grandes.",
+      alto: "Atracción no es tu problema — está llegando bastante. Tu cuello de botella es la gestión: lo que entra no se está trabajando a fondo.",
+    }[segmento];
+    const iaTexto = {
+      bajo: "A este nivel, la IA no es lo primero. Lo que rinde son sistemas simples —un CRM, conectar lo que ya usas— para estandarizar y no perder lo que llega. Y sobre todo, traer más gente: con este volumen, la atracción suele ser el cuello de botella. La IA viene después, cuando el volumen la justifique.",
+      medio: "Aún no es la prioridad. Primero ordena el dato y el seguimiento con algo simple (un CRM bien usado); la IA rinde cuando ya hay una base limpia que la alimente.",
+      alto: "Probablemente la quieres, y tiene sentido. Pero se construye sobre tus datos: si el seguimiento se pierde, hasta el mejor modelo decide a ciegas — y decidir con datos errados es peor que sin datos. Primero una sola fuente de verdad y un seguimiento que no se enfríe; sobre eso, la IA sí rinde.",
+    }[segmento];
 
     return (
       <main className="escenario-stage plan-stage">
@@ -459,12 +464,7 @@ export default function Calculator() {
 
             <details className="ia-detalle">
               <summary>¿Necesito IA?</summary>
-              <p>
-                Probablemente la quieres, y tiene sentido. Pero la IA se construye sobre tus datos:
-                si el seguimiento se pierde, hasta el mejor modelo decide a ciegas — y decidir con
-                datos errados es peor que sin datos. Primero la base (una sola fuente de verdad y un
-                seguimiento que no se enfríe); sobre eso, la IA sí rinde.
-              </p>
+              <p>{iaTexto}</p>
             </details>
 
             <p className="plan-intro">

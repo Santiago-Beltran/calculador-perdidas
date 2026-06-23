@@ -26,34 +26,21 @@ export interface ItemMetafora {
 }
 
 // Ordenados de MENOR a MAYOR precio.
+// Precios realistas y más bien ALTOS a propósito: preferimos quedarnos cortos
+// (que el conteo sea conservador) antes que exagerar. Solo vehículos + propiedad,
+// para que las combinaciones tengan sentido (un carro y una moto, un apto y un carro…).
 export const ITEMS: Record<Moneda, ItemMetafora[]> = {
   COP: [
     {
-      precio: 850_000,
-      icono: "avion",
-      singular: "un viaje de fin de semana",
-      plural: "{n} viajes de fin de semana",
-      botonSingular: "mi viaje",
-      botonPlural: "mis {n} viajes",
-    },
-    {
-      precio: 4_500_000,
-      icono: "avion",
-      singular: "un viaje a Cancún todo incluido",
-      plural: "{n} viajes a Cancún todo incluido",
-      botonSingular: "mi viaje a Cancún",
-      botonPlural: "mis {n} viajes a Cancún",
-    },
-    {
-      precio: 6_500_000,
+      precio: 9_000_000,
       icono: "moto",
-      singular: "una moto Bajaj Boxer 0 km",
-      plural: "{n} motos Bajaj Boxer 0 km",
+      singular: "una moto 0 km",
+      plural: "{n} motos 0 km",
       botonSingular: "mi moto",
       botonPlural: "mis {n} motos",
     },
     {
-      precio: 58_000_000,
+      precio: 68_000_000,
       icono: "carro",
       singular: "un Renault Kwid 0 km",
       plural: "{n} Renault Kwid 0 km",
@@ -61,7 +48,7 @@ export const ITEMS: Record<Moneda, ItemMetafora[]> = {
       botonPlural: "mis {n} Renault Kwid",
     },
     {
-      precio: 120_000_000,
+      precio: 140_000_000,
       icono: "carro",
       singular: "un Mazda 3 0 km",
       plural: "{n} Mazda 3 0 km",
@@ -69,49 +56,41 @@ export const ITEMS: Record<Moneda, ItemMetafora[]> = {
       botonPlural: "mis {n} Mazda 3",
     },
     {
-      precio: 250_000_000,
+      precio: 270_000_000,
       icono: "carro",
-      singular: "una Toyota Fortuner 0 km",
-      plural: "{n} Toyota Fortuner 0 km",
-      botonSingular: "mi Toyota Fortuner",
-      botonPlural: "mis {n} Toyota Fortuner",
+      singular: "una Toyota Hilux 4x4 0 km",
+      plural: "{n} Toyota Hilux 4x4 0 km",
+      botonSingular: "mi Toyota Hilux",
+      botonPlural: "mis {n} Toyota Hilux",
     },
     {
-      precio: 450_000_000,
+      precio: 580_000_000,
       icono: "casa",
-      singular: "un buen apartamento",
-      plural: "{n} buenos apartamentos",
+      singular: "un apartamento en Bogotá",
+      plural: "{n} apartamentos en Bogotá",
       botonSingular: "mi apartamento",
       botonPlural: "mis {n} apartamentos",
+    },
+    {
+      precio: 1_400_000_000,
+      icono: "casa",
+      singular: "una casa campestre",
+      plural: "{n} casas campestres",
+      botonSingular: "mi casa campestre",
+      botonPlural: "mis {n} casas campestres",
     },
   ],
   USD: [
     {
-      precio: 300,
-      icono: "avion",
-      singular: "un Apple Watch",
-      plural: "{n} Apple Watches",
-      botonSingular: "mi Apple Watch",
-      botonPlural: "mis {n} Apple Watches",
-    },
-    {
-      precio: 1_200,
-      icono: "avion",
-      singular: "un viaje a Cancún todo incluido",
-      plural: "{n} viajes a Cancún todo incluido",
-      botonSingular: "mi viaje a Cancún",
-      botonPlural: "mis {n} viajes a Cancún",
-    },
-    {
       precio: 3_500,
       icono: "moto",
-      singular: "una MacBook Pro tope de línea",
-      plural: "{n} MacBook Pro tope de línea",
-      botonSingular: "mi MacBook Pro",
-      botonPlural: "mis {n} MacBook Pro",
+      singular: "una moto 0 km",
+      plural: "{n} motos 0 km",
+      botonSingular: "mi moto",
+      botonPlural: "mis {n} motos",
     },
     {
-      precio: 25_000,
+      precio: 30_000,
       icono: "carro",
       singular: "un Honda Civic 0 km",
       plural: "{n} Honda Civic 0 km",
@@ -119,20 +98,36 @@ export const ITEMS: Record<Moneda, ItemMetafora[]> = {
       botonPlural: "mis {n} Honda Civic",
     },
     {
-      precio: 60_000,
+      precio: 45_000,
       icono: "carro",
-      singular: "un Tesla Model Y 0 km",
-      plural: "{n} Tesla Model Y 0 km",
-      botonSingular: "mi Tesla",
-      botonPlural: "mis {n} Tesla Model Y",
+      singular: "una Toyota RAV4 0 km",
+      plural: "{n} Toyota RAV4 0 km",
+      botonSingular: "mi RAV4",
+      botonPlural: "mis {n} RAV4",
     },
     {
-      precio: 450_000,
+      precio: 58_000,
+      icono: "carro",
+      singular: "una Toyota Hilux 0 km",
+      plural: "{n} Toyota Hilux 0 km",
+      botonSingular: "mi Toyota Hilux",
+      botonPlural: "mis {n} Toyota Hilux",
+    },
+    {
+      precio: 380_000,
       icono: "casa",
-      singular: "una casa familiar",
-      plural: "{n} casas familiares",
+      singular: "una casa",
+      plural: "{n} casas",
       botonSingular: "mi casa",
       botonPlural: "mis {n} casas",
+    },
+    {
+      precio: 1_100_000,
+      icono: "casa",
+      singular: "una casa de lujo",
+      plural: "{n} casas de lujo",
+      botonSingular: "mi casa de lujo",
+      botonPlural: "mis {n} casas de lujo",
     },
   ],
 };
@@ -165,16 +160,9 @@ export function metaforaPara(valor: number, moneda: Moneda = "COP"): Metafora {
   const chico = [...lista]
     .reverse()
     .find((x) => x.precio < grande.precio && x.precio <= resto);
-  const nChico = chico ? Math.round(resto / chico.precio) : 0;
-
-  // Si no hay ítem pequeño para el sobrante y este es grande, redondea hacia arriba
-  // la pieza grande para no quedarse corto (ej. 30M → "5 motos" en vez de "4 motos").
-  const nGrande = Math.max(
-    1,
-    !chico && resto * 2 >= grande.precio
-      ? Math.round(valor / grande.precio)
-      : Math.floor(valor / grande.precio),
-  );
+  // floor (no redondear hacia arriba): preferimos quedarnos cortos, no exagerar.
+  const nChico = chico ? Math.floor(resto / chico.precio) : 0;
+  const nGrande = Math.max(1, Math.floor(valor / grande.precio));
 
     const fraseGrande = nGrande === 1 ? grande.singular : conN(grande.plural, nGrande);
   const boton = nGrande === 1 ? grande.botonSingular : conN(grande.botonPlural, nGrande);
