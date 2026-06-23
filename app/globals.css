@@ -1077,18 +1077,15 @@ p { margin: 0; }
   100% { transform: scale(1); }
 }
 
-/* ── Revelación por etapas: aparición progresiva (un solo camino visual) ── */
-.rv-stage { opacity: 0; animation: aparecer 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
-.rv-1 { animation-delay: 0.1s; }
-.rv-2 { animation-delay: 1.9s; }  /* tras el conteo de la cifra */
-.rv-3 { animation-delay: 2.5s; }
-.rv-4 { animation-delay: 3.05s; }
+/* ── Revelación por etapas: aparición progresiva (un solo camino visual) ──
+   Los delays se calculan por tiempo de lectura en el componente (inline). */
+.rv-stage { opacity: 0; animation: aparecer 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-/* CTA con latido lento (empieza tras aparecer) que invita a tocarlo. */
-.cta-atencion { animation: latido 2.6s ease-in-out 3.3s infinite; }
+/* CTA con latido lento (su delay se fija inline, tras aparecer) que invita a tocarlo. */
+.cta-atencion { animation: latido 2.6s ease-in-out infinite; }
 @keyframes latido {
   0%, 100% { box-shadow: 0 0 0 0 rgba(107, 191, 78, 0); transform: scale(1); }
   50%      { box-shadow: 0 0 0 7px rgba(107, 191, 78, 0.14); transform: scale(1.015); }
