@@ -1009,3 +1009,15 @@ p { margin: 0; }
   color: var(--sage);
   max-width: 46ch;
 }
+
+
+/* Animacion boton siguiente */
+.animacion-siguiente {
+  animation: pulse-suave 1.5s infinite;
+}
+
+@keyframes pulse-suave {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}

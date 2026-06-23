@@ -26,8 +26,8 @@ export const TASA_MAX = 0.42; // operación a ciegas (~el 41% del caso)
 export const TASA_REFERENCIA = TASA_MAX;
 
 // Tasa de cierre de referencia
-export const CIERRE_BUENO = 0.05;        // 5% — excelente
-export const CIERRE_CLASE_MUNDIAL = 0.08; // 8% — Zillow
+export const CIERRE_BUENO = 0.03;        // 3% — excelente
+export const CIERRE_CLASE_MUNDIAL = 0.05; // 5% — Top performers Zillow
 
 /** Preguntas en lenguaje de gerente: cada una revela una capacidad que
  *  hoy quizá no tiene. "Sí" = operación sana (baja la tasa sin seguimiento). */

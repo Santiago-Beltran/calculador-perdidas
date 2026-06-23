@@ -192,8 +192,8 @@ export default function Calculator() {
       d.tasaCierre >= CIERRE_CLASE_MUNDIAL
         ? "Tasa de clase mundial."
         : d.tasaCierre >= CIERRE_BUENO
-          ? "Buena tasa. Los mejores del mundo (Zillow) llegan al 8%."
-          : "Estás por debajo de una tasa excelente (5%). Operadores de talla mundial como Zillow llegan al 8%.";
+          ? "Buena tasa. Los mejores agentes inmobiliarios (Zillow) llegan al 3% - 5%."
+          : "Estás por debajo del líder de la industria. Operadores top con Zillow suelen llegar al 3% - 5%.";
 
     return (
       <main className="escenario-stage">
@@ -224,20 +224,20 @@ export default function Calculator() {
             {paso === 0 && (
               <>
                 <span className="paso-indice">Paso 01 · Tu atracción</span>
-                <h2 className="paso-pregunta">¿Cuánto inviertes en atraer clientes?</h2>
+                <h2 className="paso-pregunta">¿Cuánto inviertes en pauta digital?</h2>
 
                 <CurrencyToggle moneda={moneda} onChange={cambiarMoneda} />
 
                 <div className="campos-grid">
                   <MoneyField
                     id="mercadeo"
-                    label="Inversión en atracción al mes"
+                    label="Inversión en pauta al mes"
                     value={mercadeoMes}
                     onChange={(v) => {
                       setMercadeo(v);
                       limpiarError();
                     }}
-                    placeholder={PLACEHOLDER[moneda].mercadeo}
+                    placeholder="0"
                     moneda={moneda}
                     error={errorPaso && num(mercadeoMes) <= 0 ? "Ingresa cuánto inviertes al mes." : undefined}
                     help="Portales, redes y publicidad al mes."
@@ -250,18 +250,12 @@ export default function Calculator() {
                       setCosto(v);
                       limpiarError();
                     }}
-                    placeholder={PLACEHOLDER[moneda].costo}
+                    placeholder="0"
                     moneda={moneda}
                     error={errorPaso && num(costoProspecto) <= 0 ? "Ingresa el costo por prospecto." : undefined}
                     help="Lo que te cuesta cada interesado."
                   />
                 </div>
-
-                {d.prospectosMes > 0 && (
-                  <div className="resaltado">
-                    Atraes aproximadamente <b>{formatearNum(d.prospectosMes)}</b> prospectos por mes.
-                  </div>
-                )}
               </>
             )}
 
@@ -281,7 +275,7 @@ export default function Calculator() {
                     setCanon(v);
                     limpiarError();
                   }}
-                  placeholder={PLACEHOLDER[moneda].canon}
+                  placeholder="0"
                   moneda={moneda}
                   error={errorPaso && num(canon) <= 0 ? "Ingresa el canon promedio." : undefined}
                   ancho
@@ -374,8 +368,10 @@ export default function Calculator() {
             )}
 
             <div className="wizard-acciones">
-              <button type="submit" className="btn btn-primario">
-                {paso < TOTAL_PASOS - 1 ? "Siguiente →" : "Ver lo que pierdo →"}
+              <button type="submit" className={`btn btn-primario ${pasoValido(paso) ? 'animacion-siguiente' : ''}`}>
+                {paso < TOTAL_PASOS - 1 
+                  ? (pasoValido(paso) ? "Sigue aquí →" : "Siguiente →") 
+                  : "Ver lo que pierdo →"}
               </button>
               <button type="button" className="btn btn-texto" onClick={retroceder}>
                 Atrás
@@ -397,26 +393,25 @@ export default function Calculator() {
         <div className="marco">
           <BrandBar label="El siguiente paso" />
           <section className="plan">
-            <span className="eyebrow">Tú decides</span>
-            <h2 className="plan-titulo">Cómo lo recuperas</h2>
+            <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
 
             <ol className="plan-pasos">
               <li>
                 <span className="plan-num">1</span>
                 <div className="plan-txt">
-                  <b>Me escribes con tu resultado.</b>
+                  <b>Envíame tu resultado.</b>
                 </div>
               </li>
               <li>
                 <span className="plan-num">2</span>
                 <div className="plan-txt">
-                  <b>Te muestro el recurso justo para tu caso. Sin costo.</b>
+                  <b>Lo reviso y selecciono la mejor opción para tu caso.</b>
                 </div>
               </li>
               <li>
                 <span className="plan-num">3</span>
                 <div className="plan-txt">
-                  <b>Tú decides si avanzas.</b>
+                  <b>En 24 horas, tienes un plan sencillo de mejora que puedes probar tú mismo.</b>
                 </div>
               </li>
             </ol>
@@ -428,7 +423,7 @@ export default function Calculator() {
               rel="noopener noreferrer"
             >
               <IconoWhatsApp />
-              Enviar mi resultado →
+              Enviar resultado →
             </a>
             <button className="btn-volver" onClick={() => setFase("reveal")}>
               Volver
@@ -450,19 +445,17 @@ export default function Calculator() {
           <BrandBar label="Resultado" />
           <section className="revelacion">
             <div className="revelacion-inner">
-              <span className="eyebrow">Con tus números</span>
-              <div className="felicita-check" aria-hidden="true">
+              <div className="felicita-check" aria-hidden="true" style={{ marginBottom: "1rem" }}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
-                  strokeLinecap="round" strokeLinejoin="round">
+                  strokeLinecap="round" strokeLinejoin="round" style={{ width: "48px", height: "48px", color: "var(--acento)" }}>
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
               </div>
-              <h2 className="felicita-titulo">
-                ¡Felicidades! Estás haciendo los fundamentales.
+              <h2 className="felicita-titulo" style={{ fontSize: "1.8rem", marginBottom: "1rem" }}>
+                Felicidades. Ya tienes el 80%.
               </h2>
-              <p className="felicita-texto">
-                No estás perdiendo clientes por mal seguimiento. ¿Quieres superar tus metas, no solo
-                llegar? Escríbeme.
+              <p className="felicita-texto" style={{ fontSize: "1.1rem", marginBottom: "2rem", color: "var(--fg-dim)" }}>
+                Si quieres saber otras cualidades de operaciones exitosas...
               </p>
 
               <a
@@ -504,31 +497,67 @@ export default function Calculator() {
 
         <section className="revelacion">
           <div className="revelacion-inner">
-            <span className="eyebrow">Con tus números</span>
-
-            <div className="final visible">
-              <span className="final-label">El LTV de clientes que hoy pierdes, en un año</span>
+            <div className="final visible" style={{ marginBottom: "1.5rem" }}>
+              <span className="final-label">Estás dejando ir aproximadamente</span>
               <div className="final-cifra">
-                {numCompacto}
-                {unidad && <span className="u"> {unidad}</span>}
+                <span>
+                  {numCompacto}
+                  {unidad && <span className="u"> {unidad}</span>}
+                </span>
+                <span className="final-moneda" style={{ display: "inline-block", fontSize: "0.45em", fontWeight: "normal", marginLeft: "12px", textAlign: "left", lineHeight: "1.1" }}>
+                  {moneda}<br/>al año
+                </span>
               </div>
-              <span className="final-moneda">
-                {moneda === "COP" ? "COP · pesos colombianos" : "USD · dólares"}
-              </span>
             </div>
 
             {/* METÁFORA con ícono — aterriza la cifra, justo debajo */}
-            <div className="metafora">
-              <span className="metafora-icono">
-                <Icono tipo={meta.icono} />
-              </span>
-              <p>
-                Es como dejar ir <b>{meta.frase}</b>, cada año.
+            <div className="metafora-destacada" style={{ 
+                marginBottom: "2rem", 
+                backgroundColor: "var(--bg-card)", 
+                padding: "1.2rem", 
+                borderRadius: "var(--radio)",
+                border: "1px solid var(--borde)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+              }}>
+              <div className="iconos-grid" style={{ 
+                  display: "flex", 
+                  flexWrap: "wrap", 
+                  justifyContent: "center", 
+                  gap: "0.4rem", 
+                  marginBottom: "1rem"
+                }}>
+                {meta.items.map((it, idx1) => (
+                  Array.from({ length: Math.min(it.cantidad, 20) }).map((_, idx2) => (
+                    <span key={`${idx1}-${idx2}`} style={{ 
+                        width: "28px", 
+                        height: "28px", 
+                        display: "inline-flex", 
+                        alignItems: "center", 
+                        justifyContent: "center",
+                        color: "var(--acento)"
+                      }}>
+                      <Icono tipo={it.icono} />
+                    </span>
+                  ))
+                ))}
+                {meta.items.some(it => it.cantidad > 20) && (
+                  <span style={{ 
+                      alignSelf: "center", 
+                      fontSize: "0.9rem", 
+                      fontWeight: "bold", 
+                      color: "var(--acento)", 
+                      marginLeft: "4px" 
+                    }}>+</span>
+                )}
+              </div>
+              <div style={{ width: "100%", height: "1px", background: "var(--borde)", marginBottom: "1rem", opacity: 0.8 }}></div>
+              <p style={{ margin: 0, fontSize: "1rem", textAlign: "center", color: "var(--fg)" }}>
+                El equivalente a <b style={{ color: "var(--fg)" }}>{meta.frase}</b>.
               </p>
             </div>
 
             <button className="btn-recuperar" onClick={() => setFase("plan")}>
-              ¿Cómo recupero {meta.boton}? →
+              ¿Cómo lo recupero? →
             </button>
             <button
               className="btn-volver"
@@ -539,12 +568,22 @@ export default function Calculator() {
             >
               Ajustar mis números
             </button>
+
+            <details className="detalles-calculo" style={{ textAlign: "left", marginTop: "2rem", padding: "1rem", background: "var(--bg-card)", borderRadius: "var(--radio)", fontSize: "0.85rem", border: "1px solid var(--borde)" }}>
+              <summary style={{ cursor: "pointer", fontWeight: "bold", color: "var(--fg)" }}>¿Cómo se calcula este número?</summary>
+              <ul style={{ marginTop: "1rem", paddingLeft: "1.2rem", color: "var(--fg-dim)", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <li><b>Prospectos generados:</b> Inversión mensual ({formatearMoneda(entradas.mercadeoMes, moneda)}) / Costo por prospecto ({formatearMoneda(entradas.costoProspecto, moneda)}) = {formatearNum(d.prospectosMes)} prospectos/mes.</li>
+                <li><b>Brecha operativa:</b> Según tus respuestas (tiempo de contacto, seguimiento, etc.), estimamos que un <b>{formatearNum(d.tasaSinSeguimiento * 100)}%</b> de los prospectos no recibe atención óptima.</li>
+                <li><b>Oportunidades reales perdidas:</b> Asumimos muy conservadoramente que solo el <b>1%</b> de esos prospectos mal gestionados habría alquilado. Es decir, {formatearNum(d.perdidasMes, 1)} arriendos perdidos al mes ({formatearNum(d.perdidasAno, 1)} al año).</li>
+                <li><b>Valor por cliente (LTV):</b> Comisión del {entradas.comision}% sobre el canon ({formatearMoneda(entradas.canon, moneda)}) durante {entradas.permanencia} meses = {formatearMoneda(d.comisionPorCliente, moneda)}.</li>
+                <li><b>Pérdida anual:</b> {formatearNum(d.perdidasAno, 1)} clientes × {formatearMoneda(d.comisionPorCliente, moneda)} = <b>{formatearMoneda(d.perdidaAnual, moneda)}</b>.</li>
+              </ul>
+            </details>
           </div>
         </section>
 
         <p className="nota-pie">
-          Estimación para dimensionar el problema. El 1% es el piso conservador; la realidad suele
-          ser mayor.
+          Estimación. La realidad puede variar. En general, este valor representa las oportunidades de mejora disponibles para llegar a tus metas.
         </p>
       </div>
     </main>
