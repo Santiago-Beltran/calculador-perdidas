@@ -436,14 +436,14 @@ export default function Calculator() {
       `${formatearMoneda(d.perdidaAnual, moneda)} al año.${fugaUno} ` +
       `Quiero los 2 arreglos simples que puedo hacer esta semana para taparla.`;
 
-    // Lectura honesta según volumen y nº de huecos: a veces NO necesitan un sistema.
+    // Lectura honesta según volumen y nº de huecos (sin pelear el "sueño" de IA).
     const huecos = operacion.filter((x) => !x).length;
     const lecturaHonesta =
       d.prospectosMes < 80 || huecos <= 1
-        ? "Con tu volumen, todavía no necesitas montar un sistema. Un par de hábitos a mano —revisar los de +48 h y una cadencia de contacto— te alcanzan por ahora. No te dejes vender “IA” aún: no la necesitas."
+        ? "Con tu volumen, un par de hábitos a mano —revisar los de +48 h y una cadencia de contacto— ya te devuelven buena parte. Todavía no necesitas montar un sistema completo."
         : d.prospectosMes >= 300 && huecos >= 3
-          ? "Con tu volumen y tus huecos, sistematizar el seguimiento ya se paga solo. Y ojo: para esto no necesitas “IA”, basta automatización simple (alertas, recordatorios). Desconfía de quien te venda IA para todo."
-          : "Antes de invertir en software, hay arreglos manuales que ya te devuelven buena parte. Empieza por ahí y automatiza solo cuando el volumen te gane. La “IA” rara vez es lo primero que necesitas.";
+          ? "Con tu volumen y tus huecos, sistematizar el seguimiento ya se paga solo: el costo de no hacerlo supera el de montarlo."
+          : "Hay arreglos manuales que ya te devuelven buena parte. Empieza por ahí y sistematiza cuando el volumen te gane.";
 
     return (
       <main className="escenario-stage plan-stage">
@@ -456,6 +456,16 @@ export default function Calculator() {
               <span className="lh-label">Lectura honesta · tu caso</span>
               <p>{lecturaHonesta}</p>
             </div>
+
+            <details className="ia-detalle">
+              <summary>¿Necesito IA?</summary>
+              <p>
+                Probablemente la quieres, y tiene sentido. Pero la IA se construye sobre tus datos:
+                si el seguimiento se pierde, hasta el mejor modelo decide a ciegas — y decidir con
+                datos errados es peor que sin datos. Primero la base (una sola fuente de verdad y un
+                seguimiento que no se enfríe); sobre eso, la IA sí rinde.
+              </p>
+            </details>
 
             <p className="plan-intro">
               Sea cual sea tu caso, los <b>2 arreglos para tu fuga #1</b> los puedes hacer tú esta

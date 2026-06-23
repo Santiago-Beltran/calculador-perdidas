@@ -1033,6 +1033,37 @@ p { margin: 0; }
   line-height: 1.5;
   color: var(--sage);
 }
+
+/* Desplegable "¿Necesito IA?" — reencuadre honesto (no pelea el sueño de IA). */
+.ia-detalle {
+  margin-top: 0.9rem;
+  border: 1px solid var(--linea-dark);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+.ia-detalle summary {
+  cursor: pointer;
+  padding: 0.8rem 1.1rem;
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--verde);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ia-detalle summary::-webkit-details-marker { display: none; }
+.ia-detalle summary::after { content: "▾"; transition: transform 0.2s; }
+.ia-detalle[open] summary::after { transform: rotate(180deg); }
+.ia-detalle p {
+  padding: 0 1.1rem 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--sage);
+}
 .plan-pasos {
   list-style: none;
   margin: 1.6rem 0 0;
