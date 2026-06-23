@@ -29,6 +29,14 @@ export interface ItemMetafora {
 export const ITEMS: Record<Moneda, ItemMetafora[]> = {
   COP: [
     {
+      precio: 850_000,
+      icono: "avion",
+      singular: "un viaje de fin de semana",
+      plural: "{n} viajes de fin de semana",
+      botonSingular: "mi viaje",
+      botonPlural: "mis {n} viajes",
+    },
+    {
       precio: 4_500_000,
       icono: "avion",
       singular: "un viaje a Cancún todo incluido",
@@ -55,29 +63,37 @@ export const ITEMS: Record<Moneda, ItemMetafora[]> = {
     {
       precio: 120_000_000,
       icono: "carro",
-      singular: "un Mazda 3 nuevo",
-      plural: "{n} Mazda 3 nuevos",
+      singular: "un Mazda 3 0 km",
+      plural: "{n} Mazda 3 0 km",
       botonSingular: "mi Mazda 3",
       botonPlural: "mis {n} Mazda 3",
     },
     {
-      precio: 195_000_000,
+      precio: 250_000_000,
       icono: "carro",
-      singular: "una Toyota Hilux 4x4 nueva",
-      plural: "{n} Toyota Hilux 4x4 nuevas",
-      botonSingular: "mi Toyota Hilux",
-      botonPlural: "mis {n} Toyota Hilux",
+      singular: "una Toyota Fortuner 0 km",
+      plural: "{n} Toyota Fortuner 0 km",
+      botonSingular: "mi Toyota Fortuner",
+      botonPlural: "mis {n} Toyota Fortuner",
     },
     {
       precio: 450_000_000,
       icono: "casa",
-      singular: "un apartamento en Bogotá",
-      plural: "{n} apartamentos en Bogotá",
+      singular: "un buen apartamento",
+      plural: "{n} buenos apartamentos",
       botonSingular: "mi apartamento",
       botonPlural: "mis {n} apartamentos",
     },
   ],
   USD: [
+    {
+      precio: 300,
+      icono: "avion",
+      singular: "un Apple Watch",
+      plural: "{n} Apple Watches",
+      botonSingular: "mi Apple Watch",
+      botonPlural: "mis {n} Apple Watches",
+    },
     {
       precio: 1_200,
       icono: "avion",
@@ -89,35 +105,47 @@ export const ITEMS: Record<Moneda, ItemMetafora[]> = {
     {
       precio: 3_500,
       icono: "moto",
-      singular: "una moto 0 km",
-      plural: "{n} motos 0 km",
-      botonSingular: "mi moto",
-      botonPlural: "mis {n} motos",
+      singular: "una MacBook Pro tope de línea",
+      plural: "{n} MacBook Pro tope de línea",
+      botonSingular: "mi MacBook Pro",
+      botonPlural: "mis {n} MacBook Pro",
     },
     {
       precio: 25_000,
       icono: "carro",
-      singular: "un Honda Civic nuevo",
-      plural: "{n} Honda Civic nuevos",
+      singular: "un Honda Civic 0 km",
+      plural: "{n} Honda Civic 0 km",
       botonSingular: "mi Honda Civic",
       botonPlural: "mis {n} Honda Civic",
     },
     {
-      precio: 150_000,
+      precio: 60_000,
+      icono: "carro",
+      singular: "un Tesla Model Y 0 km",
+      plural: "{n} Tesla Model Y 0 km",
+      botonSingular: "mi Tesla",
+      botonPlural: "mis {n} Tesla Model Y",
+    },
+    {
+      precio: 450_000,
       icono: "casa",
-      singular: "una casa",
-      plural: "{n} casas",
+      singular: "una casa familiar",
+      plural: "{n} casas familiares",
       botonSingular: "mi casa",
       botonPlural: "mis {n} casas",
     },
   ],
 };
 
+export interface MetaforaItem {
+  icono: IconoMetafora;
+  cantidad: number;
+}
+
 export interface Metafora {
   frase: string;
   boton: string;
-  icono: IconoMetafora;
-  unidades: number;
+  items: MetaforaItem[];
 }
 
 const conN = (plantilla: string, n: number) => plantilla.replace("{n}", String(n));
@@ -126,7 +154,7 @@ export function metaforaPara(valor: number, moneda: Moneda = "COP"): Metafora {
   const lista = ITEMS[moneda];
   if (!Number.isFinite(valor) || valor <= 0) {
     const it = lista[0];
-    return { frase: it.singular, boton: it.botonSingular, icono: it.icono, unidades: 1 };
+    return { frase: it.singular, boton: it.botonSingular, items: [{ icono: it.icono, cantidad: 1 }] };
   }
 
   // Pieza grande: el ítem más caro que cabe en el valor (o el más barato si no cabe ninguno).
@@ -148,14 +176,17 @@ export function metaforaPara(valor: number, moneda: Moneda = "COP"): Metafora {
       : Math.floor(valor / grande.precio),
   );
 
-  const fraseGrande = nGrande === 1 ? grande.singular : conN(grande.plural, nGrande);
+    const fraseGrande = nGrande === 1 ? grande.singular : conN(grande.plural, nGrande);
   const boton = nGrande === 1 ? grande.botonSingular : conN(grande.botonPlural, nGrande);
 
   let frase = fraseGrande;
+  const items = [{ icono: grande.icono, cantidad: nGrande }];
+
   if (chico && nChico >= 1) {
     const fraseChico = nChico === 1 ? chico.singular : conN(chico.plural, nChico);
-    frase = `${fraseGrande} y ${fraseChico} más`;
+    frase = `${fraseGrande}, y ${fraseChico}`;
+    items.push({ icono: chico.icono, cantidad: nChico });
   }
 
-  return { frase, boton, icono: grande.icono, unidades: nGrande };
+  return { frase, boton, items };
 }
