@@ -514,6 +514,18 @@ export default function Calculator() {
     return i > 0 ? [s.slice(0, i), s.slice(i + 1)] : [s, ""];
   })();
 
+  // Pacing por tiempo de lectura: cada etapa espera ~lo que toma leer la anterior
+  // (un poco más rápido que el promedio ≈4 palabras/seg → usamos 4.6).
+  const palabras = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+  const VEL_LECTURA = 4.6;
+  const dCifra = 0.15;
+  const dEquivale = 2.8; // deja "calar" la cifra tras el conteo (~1.8s)
+  const dBoton = +(
+    dEquivale + Math.max(1.9, palabras("El equivalente a " + meta.frase) / VEL_LECTURA + 0.6)
+  ).toFixed(2);
+  const dResto = +(dBoton + 1.7).toFixed(2);
+  const dLatido = +(dBoton + 0.8).toFixed(2);
+
   return (
     <main className="escenario-stage">
       <div className="marco">
@@ -522,7 +534,7 @@ export default function Calculator() {
         <section className="revelacion">
           <div className="revelacion-inner">
             {/* Etapa 1 — la cifra (con conteo rápido) */}
-            <div className="rv-stage rv-1" style={{ marginBottom: "1.5rem" }}>
+            <div className="rv-stage rv-1" style={{ marginBottom: "1.5rem", animationDelay: `${dCifra}s` }}>
               <span className="final-label">Estás dejando ir aproximadamente</span>
               <div className="final-cifra">
                 <span>
@@ -542,6 +554,7 @@ export default function Calculator() {
                 padding: "1.2rem",
                 borderRadius: "var(--radio)",
                 border: "1px solid var(--borde)",
+                animationDelay: `${dEquivale}s`,
               }}>
               <div className="iconos-grid" style={{
                   display: "flex",
@@ -575,14 +588,18 @@ export default function Calculator() {
             </div>
 
             {/* Etapa 3 — el CTA (con latido lento que llama la atención) */}
-            <div className="rv-stage rv-3">
-              <button className="btn-recuperar cta-atencion" onClick={() => setFase("plan")}>
+            <div className="rv-stage rv-3" style={{ animationDelay: `${dBoton}s` }}>
+              <button
+                className="btn-recuperar cta-atencion"
+                style={{ animationDelay: `${dLatido}s` }}
+                onClick={() => setFase("plan")}
+              >
                 ¿Cómo lo recupero? →
               </button>
             </div>
 
             {/* Etapa 4 — el resto, al final */}
-            <div className="rv-stage rv-4">
+            <div className="rv-stage rv-4" style={{ animationDelay: `${dResto}s` }}>
               <button
                 className="btn-volver"
                 onClick={() => {
