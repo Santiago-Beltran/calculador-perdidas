@@ -430,13 +430,11 @@ export default function Calculator() {
 
   // ── PLAN (qué sigue → WhatsApp) ────────────────────────────────────────
   if (fase === "plan") {
-    const listaBrechas = brechas.lista.length
-      ? ` Mis brechas: ${brechas.lista.join("; ")}.`
-      : "";
+    const fugaUno = brechas.top ? ` Mi fuga #1: ${brechas.top.etiqueta}.` : "";
     const mensajeWa =
       `Hola Santiago, hice el diagnóstico y pierdo aproximadamente ` +
-      `${formatearMoneda(d.perdidaAnual, moneda)} al año.${listaBrechas} ` +
-      `Quiero el mapa de fugas y los 2 arreglos para hacer yo mismo.`;
+      `${formatearMoneda(d.perdidaAnual, moneda)} al año.${fugaUno} ` +
+      `Quiero los 2 arreglos simples que puedo hacer esta semana para taparla.`;
     return (
       <main className="escenario-stage plan-stage">
         <div className="marco">
@@ -444,24 +442,9 @@ export default function Calculator() {
           <section className="plan">
             <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
             <p className="plan-intro">
-              Mándame tu resultado y te devuelvo —por WhatsApp, <b>gratis y sin reunión</b>—:
+              Ya sabes cuál fuga te cuesta más. Escríbeme y te paso <b>2 arreglos simples que
+              puedes hacer esta semana</b> para taparla.
             </p>
-
-            <ol className="plan-pasos">
-              <li>
-                <span className="plan-num">✓</span>
-                <div className="plan-txt">
-                  <b>El mapa de por dónde se van tus {formatearCompacto(d.perdidaAnual, moneda)}</b>
-                  <p>cuál brecha te cuesta más.</p>
-                </div>
-              </li>
-              <li>
-                <span className="plan-num">✓</span>
-                <div className="plan-txt">
-                  <b>Los 2 arreglos que puedes hacer tú mismo esta semana.</b>
-                </div>
-              </li>
-            </ol>
 
             <a
               className="btn-recuperar grande"
@@ -472,7 +455,7 @@ export default function Calculator() {
               <IconoWhatsApp />
               Enviar mi resultado →
             </a>
-            <p className="plan-reaseguro">Sin costo · Sin reunión · Te respondo yo</p>
+            <p className="plan-reaseguro">Gratis · Sin reunión · Te respondo yo</p>
             <button className="btn-volver" onClick={() => setFase("reveal")}>
               Volver
             </button>
