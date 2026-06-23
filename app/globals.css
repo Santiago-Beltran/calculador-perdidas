@@ -1003,9 +1003,16 @@ p { margin: 0; }
   color: var(--blanco);
   animation: subir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+.plan-intro {
+  margin-top: 0.8rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--sage);
+}
+.plan-intro b { color: var(--blanco); font-weight: 600; }
 .plan-pasos {
   list-style: none;
-  margin: 2.1rem 0 0;
+  margin: 1.6rem 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -1038,6 +1045,25 @@ p { margin: 0; }
   font-size: 0.9rem;
   color: var(--sage);
 }
+.plan-reaseguro {
+  margin-top: 1rem;
+  text-align: center;
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--sage);
+}
+
+/* Gancho "tu fuga #1" en el resultado (sobre el panel oscuro). */
+.fuga-top {
+  margin: 0 0 1.2rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--verde);
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--sage);
+}
+.fuga-top b { color: var(--blanco); font-weight: 600; }
 
 /* ── Pantalla de felicitación (operación sin brechas, pérdida $0) ── */
 .felicita-check {

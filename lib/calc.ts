@@ -39,6 +39,16 @@ export const PREGUNTAS_OPERACION: string[] = [
   "¿Respondes a un prospecto nuevo en menos de 5 minutos?",
 ];
 
+/** Etiqueta corta de cada brecha (cuando la respuesta es "No"), para el gancho
+ *  del resultado y el mensaje de WhatsApp. Mismo orden que PREGUNTAS_OPERACION. */
+export const BRECHAS: string[] = [
+  "tus prospectos viven dispersos, no en un solo sistema",
+  "nadie te avisa cuando un cliente lleva 48 h sin gestión",
+  "no ves en tiempo real en qué va cada oportunidad",
+  "se abandona a los prospectos tras 1 o 2 intentos",
+  "los prospectos nuevos no reciben respuesta en minutos",
+];
+
 export interface Entradas {
   mercadeoMes: number;
   costoProspecto: number;
