@@ -1004,12 +1004,35 @@ p { margin: 0; }
   animation: subir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .plan-intro {
-  margin-top: 0.8rem;
+  margin-top: 1.3rem;
   font-size: 1rem;
   line-height: 1.5;
   color: var(--sage);
 }
 .plan-intro b { color: var(--blanco); font-weight: 600; }
+
+/* Lectura honesta: consejo directo (a veces "no lo necesitas"). Desarma la venta. */
+.lectura-honesta {
+  margin-top: 1.4rem;
+  padding: 1rem 1.1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--linea-dark);
+  border-radius: 8px;
+}
+.lh-label {
+  display: block;
+  font-family: var(--fuente-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: 0.5rem;
+}
+.lectura-honesta p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--sage);
+}
 .plan-pasos {
   list-style: none;
   margin: 1.6rem 0 0;
