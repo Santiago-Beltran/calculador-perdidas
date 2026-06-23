@@ -147,9 +147,11 @@ const conN = (plantilla: string, n: number) => plantilla.replace("{n}", String(n
 
 export function metaforaPara(valor: number, moneda: Moneda = "COP"): Metafora {
   const lista = ITEMS[moneda];
-  if (!Number.isFinite(valor) || valor <= 0) {
-    const it = lista[0];
-    return { frase: it.singular, boton: it.botonSingular, items: [{ icono: it.icono, cantidad: 1 }] };
+  // Sin metáfora cuando la pérdida no alcanza ni para el ítem más barato:
+  // forzar "1 moto" por 10 pesos no tiene sentido y además exagera (1 moto = 9M).
+  // Devolvemos vacío y la pantalla omite la línea "El equivalente a…".
+  if (!Number.isFinite(valor) || valor < lista[0].precio) {
+    return { frase: "", boton: "", items: [] };
   }
 
   // Pieza grande: el ítem más caro que cabe en el valor (o el más barato si no cabe ninguno).

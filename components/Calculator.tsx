@@ -30,7 +30,9 @@ import { Stepper } from "./ui/Stepper";
 import { OperacionItem } from "./ui/OperacionItem";
 import { BenchmarkBar } from "./ui/BenchmarkBar";
 
-type Fase = "intro" | "form" | "reveal" | "plan";
+type Fase = "intro" | "form" | "calculando" | "reveal" | "plan";
+
+const MSGS_CARGA = ["Cruzando tus números…", "Midiendo las fugas…", "Poniéndoles precio…"];
 // Orden de pasos: Atracción → Cliente → Cierre → Operación
 const PASOS_NOMBRES = ["Atracción", "Cliente", "Cierre", "Operación"];
 const TOTAL_PASOS = 4;
@@ -153,6 +155,18 @@ export default function Calculator() {
     window.scrollTo(0, 0);
   }, [fase, paso]);
 
+  // Fase de cálculo: una breve carga (~3.5s) antes de revelar la cifra. Le da peso
+  // al número y crea anticipación. Cicla los mensajes y luego pasa a "reveal".
+  const [cargaPaso, setCargaPaso] = useState(0);
+  useEffect(() => {
+    if (fase !== "calculando") return;
+    setCargaPaso(0);
+    const t1 = setTimeout(() => setCargaPaso(1), 1150);
+    const t2 = setTimeout(() => setCargaPaso(2), 2300);
+    const t3 = setTimeout(() => setFase("reveal"), 3500);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [fase]);
+
   // Todos los campos son obligatorios: cada paso valida antes de avanzar.
   const pasoValido = (p: number) => {
     if (p === 0) return num(mercadeoMes) > 0 && num(costoProspecto) > 0;
@@ -180,7 +194,7 @@ export default function Calculator() {
       return;
     }
     setErrorPaso(false);
-    setFase("reveal");
+    setFase("calculando");
   };
   const retroceder = () => {
     setErrorPaso(false);
@@ -491,6 +505,27 @@ export default function Calculator() {
     );
   }
 
+  // ── CÁLCULO: breve carga antes de revelar la cifra (le da peso al número) ──
+  if (fase === "calculando") {
+    return (
+      <main className="escenario-stage">
+        <div className="marco">
+          <BrandBar label="Resultado" />
+          <section className="calculando">
+            <div className="calculando-inner">
+              <span className="eyebrow">Calculando tu operación</span>
+              <div className="calc-spinner" aria-hidden="true" />
+              <p className="calc-msg" key={cargaPaso}>{MSGS_CARGA[cargaPaso]}</p>
+              <div className="calc-barra" aria-hidden="true">
+                <div className="calc-barra-fill" />
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   // ── SIN BRECHAS (todo "Sí" ⇒ pérdida $0): pantalla de felicitación ──────
   if (d.perdidaAnual < 1) {
     const mensajeFelicitacion =
@@ -553,9 +588,10 @@ export default function Calculator() {
   const VEL_LECTURA = 4.6;
   const dCifra = 0.15;
   const dEquivale = 2.8; // deja "calar" la cifra tras el conteo (~1.8s)
-  const dBoton = +(
-    dEquivale + Math.max(1.9, palabras("El equivalente a " + meta.frase) / VEL_LECTURA + 0.6)
-  ).toFixed(2);
+  const hayMeta = meta.items.length > 0;
+  const dBoton = hayMeta
+    ? +(dEquivale + Math.max(1.9, palabras("El equivalente a " + meta.frase) / VEL_LECTURA + 0.6)).toFixed(2)
+    : +(dCifra + 2.2).toFixed(2);
   // El CTA aparece con su gancho ("tu fuga #1"); deja leerlo antes del latido y del resto.
   const dLatido = +(dBoton + 2.0).toFixed(2);
   const dResto = +(dBoton + 2.9).toFixed(2);
@@ -581,7 +617,8 @@ export default function Calculator() {
               </div>
             </div>
 
-            {/* Etapa 2 — "el equivalente a…" (aparece tras cargar la cifra) */}
+            {/* Etapa 2 — "el equivalente a…" (solo si la cifra alcanza una metáfora) */}
+            {hayMeta && (
             <div className="rv-stage rv-2 metafora-destacada" style={{
                 marginBottom: "2rem",
                 backgroundColor: "var(--bg-card)",
@@ -620,6 +657,7 @@ export default function Calculator() {
                 El equivalente a <b style={{ color: "var(--fg)" }}>{meta.frase}</b>.
               </p>
             </div>
+            )}
 
             {/* Etapa 3 — el gancho (tu fuga #1) + el CTA con latido */}
             <div className="rv-stage rv-3" style={{ animationDelay: `${dBoton}s` }}>
