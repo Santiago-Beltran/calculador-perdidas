@@ -13,6 +13,8 @@ import {
   PERM_MIN,
   PERM_MAX,
   PREGUNTAS_OPERACION,
+  PESOS_OPERACION,
+  BRECHAS,
   PREDETERMINADO,
   type Entradas,
   type Moneda,
@@ -119,6 +121,19 @@ export default function Calculator() {
   );
   const d = useMemo(() => calcular(entradas), [entradas]);
   const meta = useMemo(() => metaforaPara(d.perdidaAnual, moneda), [d.perdidaAnual, moneda]);
+
+  // Brechas: las respuestas "No". La #1 (mayor peso) es el gancho; todas van al mensaje.
+  const brechas = useMemo(() => {
+    const noIdx = PREGUNTAS_OPERACION.map((_, i) => i).filter((i) => !operacion[i]);
+    if (noIdx.length === 0) return { top: null, lista: [] as string[] };
+    const peso = (i: number) => PESOS_OPERACION[i] ?? 1;
+    const totalNo = noIdx.reduce((a, i) => a + peso(i), 0);
+    const top = noIdx.reduce((mejor, i) => (peso(i) > peso(mejor) ? i : mejor), noIdx[0]);
+    return {
+      top: { etiqueta: BRECHAS[top], monto: (peso(top) / totalNo) * d.perdidaAnual },
+      lista: noIdx.map((i) => BRECHAS[i]),
+    };
+  }, [operacion, d.perdidaAnual]);
 
   // Cambiar de moneda limpia los montos (un valor en COP no aplica como USD).
   const cambiarMoneda = (m: Moneda) => {
@@ -415,27 +430,35 @@ export default function Calculator() {
 
   // ── PLAN (qué sigue → WhatsApp) ────────────────────────────────────────
   if (fase === "plan") {
+    const listaBrechas = brechas.lista.length
+      ? ` Mis brechas: ${brechas.lista.join("; ")}.`
+      : "";
     const mensajeWa =
-      `Hola Santiago, hice el diagnóstico de oportunidades perdidas y me dio ` +
-      `${formatearMoneda(d.perdidaAnual, moneda)} al año. Quiero ver cómo recuperarlo.`;
+      `Hola Santiago, hice el diagnóstico y pierdo aproximadamente ` +
+      `${formatearMoneda(d.perdidaAnual, moneda)} al año.${listaBrechas} ` +
+      `Quiero el mapa de fugas y los 2 arreglos para hacer yo mismo.`;
     return (
       <main className="escenario-stage plan-stage">
         <div className="marco">
           <BrandBar label="" />
           <section className="plan">
             <h2 className="plan-titulo">¿Cómo lo recupero?</h2>
+            <p className="plan-intro">
+              Mándame tu resultado y te devuelvo —por WhatsApp, <b>gratis y sin reunión</b>—:
+            </p>
 
             <ol className="plan-pasos">
               <li>
-                <span className="plan-num">1</span>
+                <span className="plan-num">✓</span>
                 <div className="plan-txt">
-                  <b>Envíame tu resultado.</b>
+                  <b>El mapa de por dónde se van tus {formatearCompacto(d.perdidaAnual, moneda)}</b>
+                  <p>cuál brecha te cuesta más.</p>
                 </div>
               </li>
               <li>
-                <span className="plan-num">2</span>
+                <span className="plan-num">✓</span>
                 <div className="plan-txt">
-                  <b>Te devuelvo un plan hecho para ti.</b>
+                  <b>Los 2 arreglos que puedes hacer tú mismo esta semana.</b>
                 </div>
               </li>
             </ol>
@@ -449,6 +472,7 @@ export default function Calculator() {
               <IconoWhatsApp />
               Enviar mi resultado →
             </a>
+            <p className="plan-reaseguro">Sin costo · Sin reunión · Te respondo yo</p>
             <button className="btn-volver" onClick={() => setFase("reveal")}>
               Volver
             </button>
@@ -523,8 +547,9 @@ export default function Calculator() {
   const dBoton = +(
     dEquivale + Math.max(1.9, palabras("El equivalente a " + meta.frase) / VEL_LECTURA + 0.6)
   ).toFixed(2);
-  const dResto = +(dBoton + 1.7).toFixed(2);
-  const dLatido = +(dBoton + 0.8).toFixed(2);
+  // El CTA aparece con su gancho ("tu fuga #1"); deja leerlo antes del latido y del resto.
+  const dLatido = +(dBoton + 2.0).toFixed(2);
+  const dResto = +(dBoton + 2.9).toFixed(2);
 
   return (
     <main className="escenario-stage">
@@ -587,8 +612,14 @@ export default function Calculator() {
               </p>
             </div>
 
-            {/* Etapa 3 — el CTA (con latido lento que llama la atención) */}
+            {/* Etapa 3 — el gancho (tu fuga #1) + el CTA con latido */}
             <div className="rv-stage rv-3" style={{ animationDelay: `${dBoton}s` }}>
+              {brechas.top && (
+                <p className="fuga-top">
+                  Tu fuga #1: <b>{brechas.top.etiqueta}</b> — pesa ≈{" "}
+                  {formatearCompacto(brechas.top.monto, moneda)}/año.
+                </p>
+              )}
               <button
                 className="btn-recuperar cta-atencion"
                 style={{ animationDelay: `${dLatido}s` }}
